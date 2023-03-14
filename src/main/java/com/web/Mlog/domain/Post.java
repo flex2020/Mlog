@@ -1,4 +1,4 @@
-package com.web.Mlog.entity;
+package com.web.Mlog.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
