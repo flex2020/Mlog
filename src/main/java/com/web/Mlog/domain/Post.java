@@ -16,19 +16,19 @@ public class Post {
     @GeneratedValue
     private long postId;
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "category_name")
+    @JoinColumn(name = "categoryName")
     private Category category;
     @Column(length = 100)
     private String title;
-    @Column(columnDefinition = "LONG TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime postedDate;
+    @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedDate;
     @OneToMany
-    @JoinColumn(name="file_list")
     private List<FileData> fileList;
     @OneToMany
-    @JoinColumn(name="reply_list")
     private List<Reply> replyList;
 
 }

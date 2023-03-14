@@ -25,5 +25,6 @@ public class Reply {
     private String password;
     @Column(length = 50)
     private String salt;
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime date;
 }
