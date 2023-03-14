@@ -26,8 +26,11 @@ public class Post {
     private String content;
     private LocalDateTime postedDate;
     private LocalDateTime updatedDate;
-
-    @OneToMany(mappedBy = "file")
-    private List<FileData> file_list;
+    @OneToMany
+    @JoinColumn(name="file_list")
+    private List<FileData> fileList;
+    @OneToMany
+    @JoinColumn(name="reply_list")
+    private List<Reply> replyList;
 
 }
