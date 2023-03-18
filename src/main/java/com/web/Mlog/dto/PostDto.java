@@ -1,9 +1,18 @@
 package com.web.Mlog.dto;
 
+import com.web.Mlog.domain.FileData;
+
+import java.time.LocalDateTime;
+
 public class PostDto {
     public static class PostListDto {
-         int postId;
-
+         public int postId;
+         public String title;
+         public String category;
+         public String content;
+         public LocalDateTime postedDate;
+         public FileData thumbnail;
+         public int replyCount;
     }
 
     public static class PostDetailsDto {
