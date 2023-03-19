@@ -1,10 +1,12 @@
 package com.web.Mlog.domain;
 
 import com.web.Mlog.dto.PostDto;
+import com.web.Mlog.dto.ReplyDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,9 +51,24 @@ public class Post {
 
         return postListDto;
     }
-//    public PostDto.PostDetailsDto toDetailsDto() {
-//
-//    }
+    public PostDto.PostDetailsDto toDetailsDto() {
+        PostDto.PostDetailsDto postDetailsDto = new PostDto.PostDetailsDto();
+        List<String> filePathList = new ArrayList<>();
+        for(FileData fileData : this.fileList) filePathList.add(fileData.getFilePath());
+
+        List<ReplyDto.ReplyListDto> replyList = new ArrayList<>();
+        for(Reply reply : this.replyList) replyList.add(reply.toReplyListDto());
+
+        postDetailsDto.setPostId(this.postId);
+        postDetailsDto.setTitle(this.title);
+        postDetailsDto.setCategory(this.category.getCategoryName());
+        postDetailsDto.setContent(this.content);
+        postDetailsDto.setPostedDate(this.postedDate);
+        postDetailsDto.setFileList(filePathList);
+        postDetailsDto.setReplyList(replyList);
+
+        return postDetailsDto;
+    }
 //    public PostDto.PostAddDto toPostAddDto() {
 //
 //    }

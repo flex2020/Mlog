@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class PostDto {
@@ -25,7 +26,13 @@ public class PostDto {
     @Setter
     @ToString
     public static class PostDetailsDto {
-
+        private long postId;
+        private String title;
+        private String category;
+        private String content;
+        private LocalDateTime postedDate;
+        private List<String> fileList;
+        private List<ReplyDto.ReplyListDto> replyList;
     }
     @Getter
     @Setter
