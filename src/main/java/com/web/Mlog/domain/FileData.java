@@ -1,9 +1,6 @@
 package com.web.Mlog.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,6 +12,9 @@ public class FileData {
     @Id @Column
     @GeneratedValue
     private long fileId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="post")
+    private Post post;
     @Column(length = 100)
     private String mediaType;
     @Column(length = 100)

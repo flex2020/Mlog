@@ -26,9 +26,9 @@ public class Post {
     private LocalDateTime postedDate;
     @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedDate;
-    @OneToMany
+    @OneToMany(mappedBy = "post")
     private List<FileData> fileList;
-    @OneToMany
+    @OneToMany(mappedBy = "post")
     private List<Reply> replyList;
 
 }
