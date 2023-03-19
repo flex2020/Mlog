@@ -2,6 +2,7 @@ package com.web.Mlog.service;
 
 import com.web.Mlog.domain.Post;
 import com.web.Mlog.dto.PostDto;
+import com.web.Mlog.repository.CategoryRepository;
 import com.web.Mlog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,12 @@ import java.util.Optional;
 @Service
 public class PostService {
     private PostRepository postRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<PostDto.PostListDto> getPostList() {
@@ -36,5 +39,13 @@ public class PostService {
         if(post.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
 
         return post.get().toDetailsDto();
+    }
+
+    public boolean addPost(PostDto.PostAddDto postAddDto) {
+        System.out.println("Dto: " + postAddDto);
+        if (!categoryRepository.existsById(postAddDto.getCategoryName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리입니다.");
+        }
+        return postRepository.save(postAddDto.toEntity()).getTitle().equals(postAddDto.getTitle());
     }
 }

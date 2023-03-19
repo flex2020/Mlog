@@ -33,14 +33,15 @@ public class PostController {
     public PostDto.PostDetailsDto postDetails(@PathVariable long postId) {
         return postService.getPostDetail(postId);
     }
-//
-//    /**
-//     * 포스트 등록 처리
-//     * */
-//    @PostMapping("")
-//    public PostDto.PostAddDto postAdd() {
-//
-//    }
+
+    /**
+     * 포스트 등록 처리
+     * */
+    @PostMapping("")
+    public boolean postAdd(@RequestBody PostDto.PostAddDto postAddDto) {
+        return postService.addPost(postAddDto);
+    }
+
 //
 //    /**
 //     * 포스트 삭제 처리
