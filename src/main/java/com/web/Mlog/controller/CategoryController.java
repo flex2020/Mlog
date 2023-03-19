@@ -19,7 +19,7 @@ public class CategoryController {
      * 카테고리 추가
      * */
     @PostMapping("")
-    public boolean addCategory(@RequestBody CategoryDto categoryDto) {
+    public boolean categoryAdd(@RequestBody CategoryDto categoryDto) {
         return categoryService.addCategory(categoryDto);
     }
 
