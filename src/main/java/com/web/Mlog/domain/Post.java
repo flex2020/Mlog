@@ -1,5 +1,6 @@
 package com.web.Mlog.domain;
 
+import com.web.Mlog.dto.PostDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,5 +31,37 @@ public class Post {
     private List<FileData> fileList;
     @OneToMany(mappedBy = "post")
     private List<Reply> replyList;
+    @Column(nullable = false)
+    private boolean visible;
+
+    /**
+     * Entity -> DTO Convert
+     * */
+    public PostDto.PostListDto toPostListDto() {
+        PostDto.PostListDto postListDto = new PostDto.PostListDto();
+        postListDto.setPostId(this.postId);
+        postListDto.setTitle(this.title);
+        postListDto.setCategory(this.category.getCategoryName());
+        postListDto.setContent(this.content);
+        postListDto.setPostedDate(this.postedDate);
+        postListDto.setThumbnail(this.fileList.get(0).getFilePath());
+        postListDto.setReplyCount(this.replyList.size());
+
+        return postListDto;
+    }
+//    public PostDto.PostDetailsDto toDetailsDto() {
+//
+//    }
+//    public PostDto.PostAddDto toPostAddDto() {
+//
+//    }
+//
+//    public PostDto.PostDeleteDto toPostDeleteDto() {
+//
+//    }
+//    public PostDto.PostModifyDto toPostModifyDto() {
+//
+//    }
+
 
 }

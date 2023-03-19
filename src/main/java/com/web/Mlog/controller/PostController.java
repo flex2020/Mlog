@@ -23,11 +23,11 @@ public class PostController {
      * */
     @GetMapping("")
     public List<PostDto.PostListDto> postList() {
-
+        return postService.getPostList();
     }
 
     /**
-     * 포스트 조회
+     * 포스트 단건 조회
      * */
     @GetMapping("/{postId}")
     public PostDto.PostDetailsDto postDetails(@PathVariable long postId) {
