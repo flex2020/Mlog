@@ -1,6 +1,7 @@
 package com.web.Mlog.service;
 
 import com.web.Mlog.domain.Category;
+import com.web.Mlog.dto.CategoryDto;
 import com.web.Mlog.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +17,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public boolean addCategory(String categoryName) {
+    public boolean addCategory(CategoryDto categoryDto) {
         // 카테고리가 이미 존재하는 경우
-        System.out.println(categoryName);
-        if(categoryRepository.existsById(categoryName)) {
+        System.out.println(categoryDto);
+        if(categoryRepository.existsById(categoryDto.getCategoryName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다.");
         }
-        return categoryName.equals(categoryRepository.save(new Category(categoryName)).getCategoryName());
+        return categoryDto.getCategoryName().equals(categoryRepository.save(new Category(categoryDto.getCategoryName())).getCategoryName());
     }
 }
