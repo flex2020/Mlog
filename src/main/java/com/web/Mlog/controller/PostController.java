@@ -26,12 +26,13 @@ public class PostController {
         return postService.getPostList();
     }
 
-//    /**
-//     * 포스트 단건 조회
-//     * */
-//    @GetMapping("/{postId}")
-//    public PostDto.PostDetailsDto postDetails(@PathVariable long postId) {
-//    }
+    /**
+     * 포스트 단건 조회
+     * */
+    @GetMapping("/{postId}")
+    public PostDto.PostDetailsDto postDetails(@PathVariable long postId) {
+        return postService.getPostDetail(postId);
+    }
 //
 //    /**
 //     * 포스트 등록 처리
