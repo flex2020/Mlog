@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
@@ -46,7 +47,8 @@ public class Post {
         postListDto.setCategory(this.category.getCategoryName());
         postListDto.setContent(this.content);
         postListDto.setPostedDate(this.postedDate);
-        postListDto.setThumbnail(this.fileList.get(0).getFilePath());
+        if (!this.fileList.isEmpty()) postListDto.setThumbnail(this.fileList.get(0).getFilePath());
+        else postListDto.setThumbnail("noThumbnail.jpg");
         postListDto.setReplyCount(this.replyList.size());
 
         return postListDto;

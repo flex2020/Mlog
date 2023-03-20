@@ -4,9 +4,11 @@ import com.web.Mlog.domain.Post;
 import com.web.Mlog.dto.PostDto;
 import com.web.Mlog.repository.CategoryRepository;
 import com.web.Mlog.repository.PostRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -24,16 +26,17 @@ public class PostService {
         this.categoryRepository = categoryRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto.PostListDto> getPostList() {
         List<Post> postList = postRepository.findAllByVisibleIsTrue();
+        Hibernate.initialize(postList);
         List<PostDto.PostListDto> response = new ArrayList<>();
         for (Post post : postList) {
             response.add(post.toPostListDto());
         }
-
         return response;
     }
-
+    @Transactional(readOnly = true)
     public PostDto.PostDetailsDto getPostDetail(long id) {
         Optional<Post> post = postRepository.findByPostIdAndVisibleIsTrue(id);
         if(post.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
