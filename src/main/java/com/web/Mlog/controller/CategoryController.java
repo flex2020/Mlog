@@ -33,5 +33,11 @@ public class CategoryController {
         return categoryService.addCategory(categoryDto);
     }
 
-
+    /**
+     * 카테고리 삭제
+     * */
+    @DeleteMapping("")
+    public boolean categoryDelete(@RequestBody CategoryDto categoryDto) {
+        return categoryService.deleteCategory(categoryDto);
+    }
 }
