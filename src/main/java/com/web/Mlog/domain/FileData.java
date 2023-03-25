@@ -9,18 +9,16 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class FileData {
-    @Id @Column
-    @GeneratedValue
-    private long fileId;
+    @Id
+    @Column(length = 50)
+    private String uuid;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="post")
     private Post post;
     @Column(length = 100)
-    private String mediaType;
-    @Column(length = 100)
-    private String fileExtension;
+    private String mimeType;
     @Column(length = 500)
-    private String filePath;
+    private String fileName;
     private int width;
     private int height;
 }
