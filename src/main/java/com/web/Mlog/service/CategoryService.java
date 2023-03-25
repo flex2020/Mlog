@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CategoryService {
     private CategoryRepository categoryRepository;
@@ -15,6 +18,16 @@ public class CategoryService {
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
+    }
+
+    public List<String> getCategoryList() {
+        List<Category> all = categoryRepository.findAll();
+        List<String> categoryList = new ArrayList<>();
+        for (Category category : all) {
+            categoryList.add(category.getCategoryName());
+        }
+
+        return categoryList;
     }
 
     public boolean addCategory(CategoryDto categoryDto) {
