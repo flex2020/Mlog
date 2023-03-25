@@ -40,4 +40,12 @@ public class CategoryController {
     public boolean categoryDelete(@RequestBody CategoryDto categoryDto) {
         return categoryService.deleteCategory(categoryDto);
     }
+
+    /**
+     * 카테고리 수정
+     * */
+    @PutMapping("")
+    public boolean categoryModify(@RequestBody CategoryDto categoryDto) {
+        return categoryService.modifyCategory(categoryDto);
+    }
 }

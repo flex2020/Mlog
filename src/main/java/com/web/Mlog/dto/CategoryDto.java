@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CategoryDto {
     private String categoryName;
-
+    private String modifiedCategory;
     public Category toEntity() {
         return new Category(this.categoryName);
     }

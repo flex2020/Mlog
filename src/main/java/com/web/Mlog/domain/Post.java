@@ -15,12 +15,18 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@SequenceGenerator(
+        name = "POST_SEQ_GENERATOR"
+        , sequenceName = "POST_SEQ"
+        , initialValue = 1
+        , allocationSize = 1
+)
 public class Post {
     @Id @Column
     @GeneratedValue
-    private long postId;
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "categoryName")
+    private int postId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_name")
     private Category category;
     @Column(length = 100)
     private String title;

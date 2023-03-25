@@ -30,7 +30,7 @@ public class PostController {
      * 포스트 단건 조회
      * */
     @GetMapping("/{postId}")
-    public PostDto.PostDetailsDto postDetails(@PathVariable long postId) {
+    public PostDto.PostDetailsDto postDetails(@PathVariable int postId) {
         return postService.getPostDetail(postId);
     }
 

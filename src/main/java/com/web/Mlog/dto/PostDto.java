@@ -20,7 +20,7 @@ public class PostDto {
     @Setter
     @ToString
     public static class PostListDto {
-        private long postId;
+        private int postId;
         private String title;
         private String category;
         private String content;
@@ -32,7 +32,7 @@ public class PostDto {
     @Setter
     @ToString
     public static class PostDetailsDto {
-        private long postId;
+        private int postId;
         private String title;
         private String category;
         private String content;
@@ -51,9 +51,9 @@ public class PostDto {
         private List<FileData> fileList;
         private boolean visible;
 
-        public Post toEntity() {
+        public Post toEntity(Category category) {
             Post post = new Post();
-            post.setCategory(new Category(this.categoryName));
+            post.setCategory(category);
             post.setTitle(this.title);
             post.setContent(this.content);
             post.setPostedDate(LocalDateTime.now());
@@ -69,13 +69,13 @@ public class PostDto {
     @Setter
     @ToString
     public static class PostDeleteDto {
-        private long postId;
+        private int postId;
     }
     @Getter
     @Setter
     @ToString
     public static class PostModifyDto {
-        private long postId;
+        private int postId;
         private String category;
         private String title;
         private String content;

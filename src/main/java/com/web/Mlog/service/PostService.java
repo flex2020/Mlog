@@ -39,7 +39,7 @@ public class PostService {
         return response;
     }
     @Transactional(readOnly = true)
-    public PostDto.PostDetailsDto getPostDetail(long id) {
+    public PostDto.PostDetailsDto getPostDetail(int id) {
         Optional<Post> post = postRepository.findByPostIdAndVisibleIsTrue(id);
         if(post.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
 
@@ -47,10 +47,12 @@ public class PostService {
     }
 
     public boolean addPost(PostDto.PostAddDto postAddDto) {
-        if (!categoryRepository.existsById(postAddDto.getCategoryName())) {
+        if (!categoryRepository.existsByCategoryName(postAddDto.getCategoryName())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
-        return postRepository.save(postAddDto.toEntity()).getTitle().equals(postAddDto.getTitle());
+        Category category = categoryRepository.findByCategoryName(postAddDto.getCategoryName()).get();
+        System.out.println(category);
+        return postRepository.save(postAddDto.toEntity(category)).getTitle().equals(postAddDto.getTitle());
     }
 
     @Transactional
@@ -73,12 +75,12 @@ public class PostService {
         if (!postRepository.existsById(postModifyDto.getPostId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
-        if (!categoryRepository.existsById(postModifyDto.getCategory())) {
+        if (!categoryRepository.existsByCategoryName(postModifyDto.getCategory())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
         try {
             Post post = postRepository.findById(postModifyDto.getPostId()).get();
-            Category category = categoryRepository.findById(postModifyDto.getCategory()).get();
+            Category category = categoryRepository.findByCategoryName(postModifyDto.getCategory()).get();
 
             post.setCategory(category);
             post.setTitle(postModifyDto.getTitle());
