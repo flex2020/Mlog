@@ -45,10 +45,24 @@ public class PostService {
     }
 
     public boolean addPost(PostDto.PostAddDto postAddDto) {
-        System.out.println("Dto: " + postAddDto);
         if (!categoryRepository.existsById(postAddDto.getCategoryName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리입니다.");
         }
         return postRepository.save(postAddDto.toEntity()).getTitle().equals(postAddDto.getTitle());
+    }
+
+    @Transactional
+    public boolean deletePost(PostDto.PostDeleteDto postDeleteDto) {
+        if (!postRepository.existsById(postDeleteDto.getPostId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 포스트입니다.");
+        }
+        try {
+            Post post = postRepository.findById(postDeleteDto.getPostId()).get();
+            post.setVisible(false);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "포스트 삭제를 실패했습니다.");
+        }
+
+        return true;
     }
 }

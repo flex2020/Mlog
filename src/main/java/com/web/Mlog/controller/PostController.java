@@ -42,14 +42,13 @@ public class PostController {
         return postService.addPost(postAddDto);
     }
 
-//
-//    /**
-//     * 포스트 삭제 처리
-//     * */
-//    @DeleteMapping("")
-//    public PostDto.PostDeleteDto postDelete() {
-//
-//    }
+    /**
+     * 포스트 삭제 처리
+     * */
+    @DeleteMapping("")
+    public boolean postDelete(@RequestBody PostDto.PostDeleteDto postDeleteDto) {
+        return postService.deletePost(postDeleteDto);
+    }
 //
 //    /**
 //     * 포스트 수정 처리

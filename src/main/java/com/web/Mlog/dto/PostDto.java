@@ -69,7 +69,7 @@ public class PostDto {
     @Setter
     @ToString
     public static class PostDeleteDto {
-
+        private long postId;
     }
     @Getter
     @Setter
