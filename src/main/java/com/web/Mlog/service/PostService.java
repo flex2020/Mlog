@@ -1,5 +1,6 @@
 package com.web.Mlog.service;
 
+import com.web.Mlog.domain.Category;
 import com.web.Mlog.domain.Post;
 import com.web.Mlog.dto.PostDto;
 import com.web.Mlog.repository.CategoryRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +48,7 @@ public class PostService {
 
     public boolean addPost(PostDto.PostAddDto postAddDto) {
         if (!categoryRepository.existsById(postAddDto.getCategoryName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
         return postRepository.save(postAddDto.toEntity()).getTitle().equals(postAddDto.getTitle());
     }
@@ -54,7 +56,7 @@ public class PostService {
     @Transactional
     public boolean deletePost(PostDto.PostDeleteDto postDeleteDto) {
         if (!postRepository.existsById(postDeleteDto.getPostId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 포스트입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
         try {
             Post post = postRepository.findById(postDeleteDto.getPostId()).get();
@@ -63,6 +65,30 @@ public class PostService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "포스트 삭제를 실패했습니다.");
         }
 
+        return true;
+    }
+
+    @Transactional
+    public boolean modifyPost(PostDto.PostModifyDto postModifyDto) {
+        if (!postRepository.existsById(postModifyDto.getPostId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
+        }
+        if (!categoryRepository.existsById(postModifyDto.getCategory())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
+        }
+        try {
+            Post post = postRepository.findById(postModifyDto.getPostId()).get();
+            Category category = categoryRepository.findById(postModifyDto.getCategory()).get();
+
+            post.setCategory(category);
+            post.setTitle(postModifyDto.getTitle());
+            post.setContent(postModifyDto.getContent());
+            post.setUpdatedDate(LocalDateTime.now());
+            post.setThumbnail(postModifyDto.getThumbnail());
+            post.setVisible(postModifyDto.isVisible());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "포스트 수정을 실패했습니다.");
+        }
         return true;
     }
 }

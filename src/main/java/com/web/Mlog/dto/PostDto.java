@@ -75,6 +75,12 @@ public class PostDto {
     @Setter
     @ToString
     public static class PostModifyDto {
-
+        private long postId;
+        private String category;
+        private String title;
+        private String content;
+        private LocalDateTime updatedDate;
+        private String thumbnail;
+        private boolean visible;
     }
 }

@@ -49,13 +49,13 @@ public class PostController {
     public boolean postDelete(@RequestBody PostDto.PostDeleteDto postDeleteDto) {
         return postService.deletePost(postDeleteDto);
     }
-//
-//    /**
-//     * 포스트 수정 처리
-//     * */
-//    @PutMapping("")
-//    public PostDto.PostModifyDto postModify() {
-//
-//    }
+
+    /**
+     * 포스트 수정 처리
+     * */
+    @PutMapping("")
+    public boolean postModify(@RequestBody PostDto.PostModifyDto postModifyDto) {
+        return postService.modifyPost(postModifyDto);
+    }
 
 }
