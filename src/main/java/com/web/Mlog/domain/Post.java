@@ -30,6 +30,8 @@ public class Post {
     private LocalDateTime postedDate;
     @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedDate;
+    @Column(length = 200)
+    private String thumbnail;
     @OneToMany(mappedBy = "post")
     private List<FileData> fileList;
     @OneToMany(mappedBy = "post")
