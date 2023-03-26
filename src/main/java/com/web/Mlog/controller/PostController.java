@@ -1,6 +1,7 @@
 package com.web.Mlog.controller;
 
 import com.web.Mlog.dto.PostDto;
+import com.web.Mlog.dto.ReplyDto;
 import com.web.Mlog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -58,4 +59,19 @@ public class PostController {
         return postService.modifyPost(postModifyDto);
     }
 
+    /**
+     * 포스트 댓글 작성
+     * */
+    @PostMapping("/{postId}/reply")
+    public boolean replyAdd(@PathVariable int postId, @RequestBody ReplyDto.ReplyAddDto replyAddDto) {
+        return postService.addReply(postId, replyAddDto);
+    }
+
+    /**
+     * 포스트 댓글 수정
+     * */
+    @PutMapping("/{postId}/reply")
+    public boolean replyModify(@PathVariable int postId, @RequestBody ReplyDto.ReplyModifyDto replyModifyDto) {
+        return postService.modifyReply(postId, replyModifyDto);
+    }
 }

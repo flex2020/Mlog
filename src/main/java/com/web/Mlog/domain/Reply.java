@@ -4,13 +4,14 @@ import com.web.Mlog.dto.PostDto;
 import com.web.Mlog.dto.ReplyDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Reply {
     @Id @Column
@@ -29,6 +30,8 @@ public class Reply {
     private String salt;
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime date;
+    @ColumnDefault("-1")
+    private long toReply;
 
     public ReplyDto.ReplyListDto toReplyListDto() {
         ReplyDto.ReplyListDto replyListDto = new ReplyDto.ReplyListDto();
@@ -36,7 +39,7 @@ public class Reply {
         replyListDto.setWriter(this.writer);
         replyListDto.setContent(this.content);
         replyListDto.setDate(this.date);
-
+        replyListDto.setToReply(this.toReply);
         return replyListDto;
     }
 }
