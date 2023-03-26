@@ -13,6 +13,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SequenceGenerator(
+        name = "REPLY_SEQ_GENERATOR"
+        , sequenceName = "REPLY_SEQ"
+        , initialValue = 1
+        , allocationSize = 1
+)
 public class Reply {
     @Id @Column
     @GeneratedValue
