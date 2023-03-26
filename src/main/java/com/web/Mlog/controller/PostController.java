@@ -66,6 +66,9 @@ public class PostController {
         return postService.addReply(postId, replyAddDto);
     }
 
+    /**
+     * 포스트 댓글 삭제
+     * */
     @DeleteMapping("/{postId}/reply")
     public boolean replyDelete(@PathVariable int postId, @RequestBody ReplyDto.ReplyDeleteDto replyDeleteDto) {
         return postService.deleteReply(postId, replyDeleteDto);
