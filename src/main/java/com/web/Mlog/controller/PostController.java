@@ -5,7 +5,6 @@ import com.web.Mlog.dto.ReplyDto;
 import com.web.Mlog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -65,6 +64,11 @@ public class PostController {
     @PostMapping("/{postId}/reply")
     public boolean replyAdd(@PathVariable int postId, @RequestBody ReplyDto.ReplyAddDto replyAddDto) {
         return postService.addReply(postId, replyAddDto);
+    }
+
+    @DeleteMapping("/{postId}/reply")
+    public boolean replyDelete(@PathVariable int postId, @RequestBody ReplyDto.ReplyDeleteDto replyDeleteDto) {
+        return postService.deleteReply(postId, replyDeleteDto);
     }
 
     /**

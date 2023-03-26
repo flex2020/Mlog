@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class PostService {
@@ -109,6 +110,27 @@ public class PostService {
             replyRepository.save(replyAddDto.toEntity(post));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 작성을 실패했습니다.");
+        }
+        return true;
+    }
+
+    @Transactional
+    public boolean deleteReply(int postId, ReplyDto.ReplyDeleteDto replyDeleteDto) {
+        if (!postRepository.existsById(postId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
+        }
+        if (!replyRepository.existsById(replyDeleteDto.getReplyId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다.");
+        }
+        Reply reply = replyRepository.findById(replyDeleteDto.getReplyId()).get();
+        if (!reply.getPassword().equals(replyDeleteDto.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 틀립니다.");
+        }
+        try {
+            reply.setVisible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 삭제를 실패했습니다.");
         }
         return true;
     }

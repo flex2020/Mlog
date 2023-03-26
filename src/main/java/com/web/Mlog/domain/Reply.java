@@ -32,6 +32,9 @@ public class Reply {
     private LocalDateTime date;
     @ColumnDefault("-1")
     private long toReply;
+    @Column(nullable = false)
+    @ColumnDefault("true")
+    private boolean visible;
 
     public ReplyDto.ReplyListDto toReplyListDto() {
         ReplyDto.ReplyListDto replyListDto = new ReplyDto.ReplyListDto();
@@ -40,6 +43,7 @@ public class Reply {
         replyListDto.setContent(this.content);
         replyListDto.setDate(this.date);
         replyListDto.setToReply(this.toReply);
+        replyListDto.setVisible(this.visible);
         return replyListDto;
     }
 }

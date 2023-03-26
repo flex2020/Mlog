@@ -18,6 +18,7 @@ public class ReplyDto {
         private String content;
         private LocalDateTime date;
         private long toReply;
+        private boolean visible;
     }
 
     @Getter
@@ -28,6 +29,7 @@ public class ReplyDto {
         private String content;
         private String password;
         private long toReply;
+        private boolean visible;
 
         public Reply toEntity(Post post) {
             Reply reply = new Reply();
@@ -39,9 +41,18 @@ public class ReplyDto {
             reply.setSalt("");
             reply.setDate(LocalDateTime.now());
             reply.setToReply(this.toReply);
+            reply.setVisible(this.visible);
 
             return reply;
         }
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    public static class ReplyDeleteDto {
+        private long replyId;
+        private String password;
     }
 
     @Getter
@@ -51,5 +62,6 @@ public class ReplyDto {
         private long replyId;
         private String content;
         private String password;
+        private boolean visible;
     }
 }
