@@ -23,7 +23,7 @@ public class PostDto {
         private int postId;
         private String title;
         private String category;
-        private String content;
+        private String previewContent;
         private LocalDateTime postedDate;
         private String thumbnail;
         private int replyCount;
@@ -48,6 +48,7 @@ public class PostDto {
         private String categoryName;
         private String title;
         private String content;
+        private String previewContent;
         private List<FileData> fileList;
         private boolean visible;
 
@@ -56,6 +57,7 @@ public class PostDto {
             post.setCategory(category);
             post.setTitle(this.title);
             post.setContent(this.content);
+            post.setPreviewContent(this.previewContent);
             post.setPostedDate(LocalDateTime.now());
             post.setUpdatedDate(LocalDateTime.now());
             post.setFileList(this.fileList);
@@ -79,6 +81,7 @@ public class PostDto {
         private String category;
         private String title;
         private String content;
+        private String previewContent;
         private LocalDateTime updatedDate;
         private String thumbnail;
         private boolean visible;

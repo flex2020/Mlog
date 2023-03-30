@@ -38,6 +38,8 @@ public class Post {
     private LocalDateTime updatedDate;
     @Column(length = 200)
     private String thumbnail;
+    @Column(length = 200, nullable = false)
+    private String previewContent;
     @OneToMany(mappedBy = "post")
     private List<FileData> fileList;
     @OneToMany(mappedBy = "post")
@@ -53,7 +55,7 @@ public class Post {
         postListDto.setPostId(this.postId);
         postListDto.setTitle(this.title);
         postListDto.setCategory(this.category.getCategoryName());
-        postListDto.setContent(this.content);
+        postListDto.setPreviewContent(this.previewContent);
         postListDto.setPostedDate(this.postedDate);
         if (!this.fileList.isEmpty()) postListDto.setThumbnail(this.fileList.get(0).getFileName());
         else postListDto.setThumbnail("noThumbnail.jpg");
@@ -79,16 +81,4 @@ public class Post {
 
         return postDetailsDto;
     }
-//    public PostDto.PostAddDto toPostAddDto() {
-//
-//    }
-//
-//    public PostDto.PostDeleteDto toPostDeleteDto() {
-//
-//    }
-//    public PostDto.PostModifyDto toPostModifyDto() {
-//
-//    }
-
-
 }
