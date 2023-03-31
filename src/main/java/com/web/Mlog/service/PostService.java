@@ -37,8 +37,8 @@ public class PostService {
 
 
     @Transactional(readOnly = true)
-    public List<PostDto.PostListDto> getPostList() {
-        List<Post> postList = postRepository.findAllByVisibleIsTrue();
+    public List<PostDto.PostListDto> getPostList(int postId) {
+        List<Post> postList = postRepository.findAllByPostIdAndVisibleTrue();
         List<PostDto.PostListDto> response = new ArrayList<>();
         for (Post post : postList) {
             response.add(post.toPostListDto());

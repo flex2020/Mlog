@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    public List<Post> findAllByVisibleIsTrue();
+    public List<Post> findAllByPostIdAndVisibleTrue();
     public Optional<Post> findByPostIdAndVisibleIsTrue(int id);
 }

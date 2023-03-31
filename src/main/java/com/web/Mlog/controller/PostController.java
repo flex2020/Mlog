@@ -22,8 +22,8 @@ public class PostController {
      * 포스트 목록
      * */
     @GetMapping("")
-    public List<PostDto.PostListDto> postList() {
-        return postService.getPostList();
+    public List<PostDto.PostListDto> postList(@RequestParam(defaultValue = "1", required = false) int postId) {
+        return postService.getPostList(postId);
     }
 
     /**
