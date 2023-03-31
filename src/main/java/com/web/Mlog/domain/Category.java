@@ -1,5 +1,6 @@
 package com.web.Mlog.domain;
 
+import com.web.Mlog.dto.CategoryDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,5 +29,13 @@ public class Category {
 
     public Category(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public CategoryDto.CategoryListDto toCategoryListDto() {
+        CategoryDto.CategoryListDto dto = new CategoryDto.CategoryListDto();
+        dto.setId(this.id);
+        dto.setCategoryName(this.categoryName);
+
+        return dto;
     }
 }

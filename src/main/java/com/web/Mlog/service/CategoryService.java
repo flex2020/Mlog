@@ -21,24 +21,24 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<String> getCategoryList() {
+    public List<CategoryDto.CategoryListDto> getCategoryList() {
         List<Category> all = categoryRepository.findAll();
-        List<String> categoryList = new ArrayList<>();
+        List<CategoryDto.CategoryListDto> categoryList = new ArrayList<>();
         for (Category category : all) {
-            categoryList.add(category.getCategoryName());
+            categoryList.add(category.toCategoryListDto());
         }
 
         return categoryList;
     }
 
-    public boolean addCategory(CategoryDto categoryDto) {
+    public boolean addCategory(CategoryDto.CategoryAddDto categoryDto) {
         if (categoryRepository.existsByCategoryName(categoryDto.getCategoryName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다.");
         }
         return categoryDto.getCategoryName().equals(categoryRepository.save(new Category(categoryDto.getCategoryName())).getCategoryName());
     }
 
-    public boolean deleteCategory(CategoryDto categoryDto) {
+    public boolean deleteCategory(CategoryDto.CategoryDeleteDto categoryDto) {
         if (!categoryRepository.existsByCategoryName(categoryDto.getCategoryName())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
@@ -52,7 +52,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public boolean modifyCategory(CategoryDto categoryDto) {
+    public boolean modifyCategory(CategoryDto.CategoryModifyDto  categoryDto) {
         if (!categoryRepository.existsByCategoryName(categoryDto.getCategoryName())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }

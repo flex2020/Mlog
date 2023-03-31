@@ -21,7 +21,7 @@ public class CategoryController {
      * 카테고리 목록
      * */
     @GetMapping("")
-    public List<String> categoryList() {
+    public List<CategoryDto.CategoryListDto> categoryList() {
         return categoryService.getCategoryList();
     }
 
@@ -29,7 +29,7 @@ public class CategoryController {
      * 카테고리 추가
      * */
     @PostMapping("")
-    public boolean categoryAdd(@RequestBody CategoryDto categoryDto) {
+    public boolean categoryAdd(@RequestBody CategoryDto.CategoryAddDto categoryDto) {
         return categoryService.addCategory(categoryDto);
     }
 
@@ -37,7 +37,7 @@ public class CategoryController {
      * 카테고리 삭제
      * */
     @DeleteMapping("")
-    public boolean categoryDelete(@RequestBody CategoryDto categoryDto) {
+    public boolean categoryDelete(@RequestBody CategoryDto.CategoryDeleteDto categoryDto) {
         return categoryService.deleteCategory(categoryDto);
     }
 
@@ -45,7 +45,7 @@ public class CategoryController {
      * 카테고리 수정
      * */
     @PutMapping("")
-    public boolean categoryModify(@RequestBody CategoryDto categoryDto) {
+    public boolean categoryModify(@RequestBody CategoryDto.CategoryModifyDto categoryDto) {
         return categoryService.modifyCategory(categoryDto);
     }
 }
