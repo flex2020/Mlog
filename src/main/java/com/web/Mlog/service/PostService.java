@@ -37,8 +37,15 @@ public class PostService {
 
 
     @Transactional(readOnly = true)
-    public List<PostDto.PostListDto> getPostList(int postId) {
-        List<Post> postList = postRepository.findAllByPostIdAndVisibleTrue(postId);
+    public List<PostDto.PostListDto> getPostList(int categoryId) {
+        List<Post> postList;
+        if (categoryId == 0) {
+            postList = postRepository.findAllByVisibleTrue();
+        } else {
+            if (!categoryRepository.existsById(categoryId)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
+            Category category = categoryRepository.findById(categoryId).get();
+            postList = postRepository.findAllByCategoryAndVisibleTrue(category);
+        }
         List<PostDto.PostListDto> response = new ArrayList<>();
         for (Post post : postList) {
             response.add(post.toPostListDto());

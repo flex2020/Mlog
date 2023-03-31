@@ -22,8 +22,8 @@ public class PostController {
      * 포스트 목록
      * */
     @GetMapping("")
-    public List<PostDto.PostListDto> postList(@RequestParam(defaultValue = "1", required = false) int postId) {
-        return postService.getPostList(postId);
+    public List<PostDto.PostListDto> postList(@RequestParam(name = "category", defaultValue = "0", required = false) int categoryId) {
+        return postService.getPostList(categoryId);
     }
 
     /**
