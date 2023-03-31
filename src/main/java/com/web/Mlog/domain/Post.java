@@ -57,8 +57,7 @@ public class Post {
         postListDto.setCategory(this.category.getCategoryName());
         postListDto.setPreviewContent(this.previewContent);
         postListDto.setPostedDate(this.postedDate);
-        if (!this.fileList.isEmpty()) postListDto.setThumbnail(this.fileList.get(0).getFileName());
-        else postListDto.setThumbnail("noThumbnail.jpg");
+        postListDto.setThumbnail(this.thumbnail);
         postListDto.setReplyCount(this.replyList.size());
 
         return postListDto;
