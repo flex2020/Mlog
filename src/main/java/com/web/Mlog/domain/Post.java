@@ -57,7 +57,8 @@ public class Post {
         postListDto.setCategory(this.category.getCategoryName());
         postListDto.setPreviewContent(this.previewContent);
         postListDto.setPostedDate(this.postedDate);
-        postListDto.setThumbnail(this.thumbnail);
+        if (this.thumbnail != null) postListDto.setThumbnail(this.thumbnail);
+        else postListDto.setThumbnail("https://cdn-icons-png.flaticon.com/512/3586/3586675.png");
         postListDto.setReplyCount(this.replyList.size());
 
         return postListDto;

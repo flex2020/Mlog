@@ -45,7 +45,7 @@ public class PostDto {
     @ToString
     @NoArgsConstructor
     public static class PostAddDto {
-        private String categoryName;
+        private int categoryId;
         private String title;
         private String content;
         private String previewContent;
