@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class FileData {
     @Id
@@ -16,10 +16,10 @@ public class FileData {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="post")
     private Post post;
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String mimeType;
-    @Column(length = 500)
+    @Column(length = 500, nullable = false)
     private String fileName;
-    private int width;
-    private int height;
+    @Column(nullable = false)
+    private long fileSize;
 }
