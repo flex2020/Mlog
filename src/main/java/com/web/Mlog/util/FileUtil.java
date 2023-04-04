@@ -16,9 +16,11 @@ import java.util.UUID;
 
 @Component
 public class FileUtil {
-    private static String originalFileRootPath = "/home/ubuntu/mlog/resource/original/";
-    private static String thumbnailFileRootPath = "/home/ubuntu/mlog/resource/thumbnail/";
-    public static FileData getFileData(MultipartFile multipartFile) {
+    @Value("${original.path}")
+    private String originalFileRootPath;
+    @Value("${thumbnail.path}")
+    private String thumbnailFileRootPath;
+    public FileData getFileData(MultipartFile multipartFile) {
         // DB에 저장하기 위해 파일의 정보를 얻음
         FileData fileData = new FileData();
         try {
@@ -36,7 +38,7 @@ public class FileUtil {
         return fileData;
     }
 
-    public static boolean uploadFile(MultipartFile multipartFile, String fileName) {
+    public boolean uploadFile(MultipartFile multipartFile, String fileName) {
         // 파일을 서버에 저장함
         try {
             System.out.println("originalFileRootPath: " + originalFileRootPath);
