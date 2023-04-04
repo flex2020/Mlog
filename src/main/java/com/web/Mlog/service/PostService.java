@@ -61,10 +61,11 @@ public class PostService {
     }
 
     public boolean addPost(PostDto.PostAddDto postAddDto) {
-        if (!categoryRepository.existsByCategoryName(postAddDto.getCategoryName())) {
+        System.out.println("Dto: " + postAddDto);
+        if (!categoryRepository.existsById(postAddDto.getCategoryId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
-        Category category = categoryRepository.findByCategoryName(postAddDto.getCategoryName()).get();
+        Category category = categoryRepository.findById(postAddDto.getCategoryId()).get();
         System.out.println(category);
         return postRepository.save(postAddDto.toEntity(category)).getTitle().equals(postAddDto.getTitle());
     }
