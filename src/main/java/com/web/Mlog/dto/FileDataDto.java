@@ -11,6 +11,6 @@ public class FileDataDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FileUploadDto {
-        private String uuid;
+        private String fileName;
     }
 }

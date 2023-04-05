@@ -41,7 +41,6 @@ public class FileUtil {
     public boolean uploadFile(MultipartFile multipartFile, String fileName) {
         // 파일을 서버에 저장함
         try {
-            System.out.println("originalFileRootPath: " + originalFileRootPath);
             if (!new File(originalFileRootPath).exists()) {
                 try {
                     new File(originalFileRootPath).mkdirs();

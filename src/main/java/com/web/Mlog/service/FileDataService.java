@@ -26,7 +26,7 @@ public class FileDataService {
         //--- 2. DB에 저장하기전에 서버에 파일을 업로드 한다.
         if (fileUtil.uploadFile(multipartFile, fileData.getFileName())) {
             fileDataRepository.save(fileData);
-            dto.setUuid(fileData.getUuid());
+            dto.setFileName(fileData.getFileName());
         }
         return dto;
     }
