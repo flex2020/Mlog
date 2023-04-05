@@ -61,7 +61,6 @@ public class PostService {
     }
 
     public boolean addPost(PostDto.PostAddDto postAddDto) {
-        System.out.println("Dto: " + postAddDto);
         if (!categoryRepository.existsById(postAddDto.getCategoryId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
