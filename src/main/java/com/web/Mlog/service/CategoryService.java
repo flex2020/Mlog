@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -53,11 +54,12 @@ public class CategoryService {
 
     @Transactional
     public boolean modifyCategory(CategoryDto.CategoryModifyDto  categoryDto) {
-        if (!categoryRepository.existsByCategoryName(categoryDto.getCategoryName())) {
+        Optional<Category> optionalCategory = categoryRepository.findByCategoryName(categoryDto.getCategoryName());
+        if (optionalCategory.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
         try {
-            Category category = categoryRepository.findByCategoryName(categoryDto.getCategoryName()).get();
+            Category category = optionalCategory.get();
             category.setCategoryName(categoryDto.getModifiedCategory());
         } catch (Exception e) {
             e.printStackTrace();

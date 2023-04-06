@@ -42,9 +42,9 @@ public class PostService {
         if (categoryId == 0) {
             postList = postRepository.findAllByVisibleTrue();
         } else {
-            if (!categoryRepository.existsById(categoryId)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
-            Category category = categoryRepository.findById(categoryId).get();
-            postList = postRepository.findAllByCategoryAndVisibleTrue(category);
+            Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+            if (optionalCategory.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
+            postList = postRepository.findAllByCategoryAndVisibleTrue(optionalCategory.get());
         }
         List<PostDto.PostListDto> response = new ArrayList<>();
         for (Post post : postList) {
@@ -61,22 +61,22 @@ public class PostService {
     }
 
     public boolean addPost(PostDto.PostAddDto postAddDto) {
-        if (!categoryRepository.existsById(postAddDto.getCategoryId())) {
+        Optional<Category> optionalCategory = categoryRepository.findById(postAddDto.getCategoryId());
+        if (optionalCategory.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
-        Category category = categoryRepository.findById(postAddDto.getCategoryId()).get();
-        System.out.println(category);
-        return postRepository.save(postAddDto.toEntity(category)).getTitle().equals(postAddDto.getTitle());
+
+        return postRepository.save(postAddDto.toEntity(optionalCategory.get())).getTitle().equals(postAddDto.getTitle());
     }
 
     @Transactional
     public boolean deletePost(PostDto.PostDeleteDto postDeleteDto) {
-        if (!postRepository.existsById(postDeleteDto.getPostId())) {
+        Optional<Post> optionalPost = postRepository.findByPostIdAndVisibleIsTrue(postDeleteDto.getPostId());
+        if (optionalPost.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
         try {
-            Post post = postRepository.findById(postDeleteDto.getPostId()).get();
-            post.setVisible(false);
+            optionalPost.get().setVisible(false);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "포스트 삭제를 실패했습니다.");
         }
@@ -86,17 +86,18 @@ public class PostService {
 
     @Transactional
     public boolean modifyPost(PostDto.PostModifyDto postModifyDto) {
-        if (!postRepository.existsById(postModifyDto.getPostId())) {
+        Optional<Post> optionalPost = postRepository.findByPostIdAndVisibleIsTrue(postModifyDto.getPostId());
+        Optional<Category> optionalCategory = categoryRepository.findByCategoryName(postModifyDto.getCategory());
+        if (optionalPost.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
-        if (!categoryRepository.existsByCategoryName(postModifyDto.getCategory())) {
+        if (optionalCategory.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
         try {
-            Post post = postRepository.findById(postModifyDto.getPostId()).get();
-            Category category = categoryRepository.findByCategoryName(postModifyDto.getCategory()).get();
+            Post post = optionalPost.get();
 
-            post.setCategory(category);
+            post.setCategory(optionalCategory.get());
             post.setTitle(postModifyDto.getTitle());
             post.setContent(postModifyDto.getContent());
             post.setUpdatedDate(LocalDateTime.now());
@@ -109,12 +110,12 @@ public class PostService {
     }
 
     public boolean addReply(int postId, ReplyDto.ReplyAddDto replyAddDto) {
-        if (!postRepository.existsById(postId)) {
+        Optional<Post> optionalPost = postRepository.findByPostIdAndVisibleIsTrue(postId);
+        if (optionalPost.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
         try {
-            Post post = postRepository.findByPostIdAndVisibleIsTrue(postId).get();
-            replyRepository.save(replyAddDto.toEntity(post));
+            replyRepository.save(replyAddDto.toEntity(optionalPost.get()));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 작성을 실패했습니다.");
         }
@@ -123,15 +124,16 @@ public class PostService {
 
     @Transactional
     public boolean deleteReply(int postId, ReplyDto.ReplyDeleteDto replyDeleteDto) {
+        Optional<Reply> optionalReply = replyRepository.findByIdAndVisibleIsTrue(replyDeleteDto.getReplyId());
         if (!postRepository.existsById(postId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
-        if (!replyRepository.existsById(replyDeleteDto.getReplyId())) {
+        if (optionalReply.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다.");
         }
-        Reply reply = replyRepository.findById(replyDeleteDto.getReplyId()).get();
+        Reply reply = optionalReply.get();
         if (!reply.getPassword().equals(replyDeleteDto.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 틀립니다.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 틀립니다.");
         }
         try {
             reply.setVisible(false);
@@ -144,15 +146,16 @@ public class PostService {
 
     @Transactional
     public boolean modifyReply(int postId, ReplyDto.ReplyModifyDto replyModifyDto) {
+        Optional<Reply> optionalReply = replyRepository.findByIdAndVisibleIsTrue(replyModifyDto.getReplyId());
         if (!postRepository.existsById(postId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
-        if (!replyRepository.existsById(replyModifyDto.getReplyId())) {
+        if (optionalReply.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다.");
         }
-        Reply reply = replyRepository.findById(replyModifyDto.getReplyId()).get();
+        Reply reply = optionalReply.get();
         if (!reply.getPassword().equals(replyModifyDto.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 틀립니다.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 틀립니다.");
         }
         try {
             reply.setContent(replyModifyDto.getContent());
