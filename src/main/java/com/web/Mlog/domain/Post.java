@@ -58,15 +58,13 @@ public class Post {
         postListDto.setPreviewContent(this.previewContent);
         postListDto.setPostedDate(this.postedDate);
         if (this.thumbnail != null) postListDto.setThumbnail(this.thumbnail);
-        else postListDto.setThumbnail("/files/no_image.png");
+        else postListDto.setThumbnail("etc/no_image.png");
         postListDto.setReplyCount(this.replyList.size());
 
         return postListDto;
     }
     public PostDto.PostDetailsDto toDetailsDto() {
         PostDto.PostDetailsDto postDetailsDto = new PostDto.PostDetailsDto();
-        List<String> filePathList = new ArrayList<>();
-        for(FileData fileData : this.fileList) filePathList.add(fileData.getFileName());
 
         List<ReplyDto.ReplyListDto> replyList = new ArrayList<>();
         for(Reply reply : this.replyList) replyList.add(reply.toReplyListDto());
@@ -76,7 +74,6 @@ public class Post {
         postDetailsDto.setCategory(this.category.getCategoryName());
         postDetailsDto.setContent(this.content);
         postDetailsDto.setPostedDate(this.postedDate);
-        postDetailsDto.setFileList(filePathList);
         postDetailsDto.setReplyList(replyList);
 
         return postDetailsDto;
