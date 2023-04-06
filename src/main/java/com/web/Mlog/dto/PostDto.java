@@ -37,7 +37,6 @@ public class PostDto {
         private String category;
         private String content;
         private LocalDateTime postedDate;
-        private List<String> fileList;
         private List<ReplyDto.ReplyListDto> replyList;
     }
     @Getter
