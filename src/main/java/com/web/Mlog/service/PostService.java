@@ -124,7 +124,7 @@ public class PostService {
 
     @Transactional
     public boolean deleteReply(int postId, ReplyDto.ReplyDeleteDto replyDeleteDto) {
-        Optional<Reply> optionalReply = replyRepository.findByIdAndVisibleIsTrue(replyDeleteDto.getReplyId());
+        Optional<Reply> optionalReply = replyRepository.findByReplyIdAndVisibleIsTrue(replyDeleteDto.getReplyId());
         if (!postRepository.existsById(postId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
@@ -146,7 +146,7 @@ public class PostService {
 
     @Transactional
     public boolean modifyReply(int postId, ReplyDto.ReplyModifyDto replyModifyDto) {
-        Optional<Reply> optionalReply = replyRepository.findByIdAndVisibleIsTrue(replyModifyDto.getReplyId());
+        Optional<Reply> optionalReply = replyRepository.findByReplyIdAndVisibleIsTrue(replyModifyDto.getReplyId());
         if (!postRepository.existsById(postId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
