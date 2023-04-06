@@ -1,11 +1,13 @@
 package com.web.Mlog.service;
 
 import com.web.Mlog.domain.Category;
+import com.web.Mlog.domain.FileData;
 import com.web.Mlog.domain.Post;
 import com.web.Mlog.domain.Reply;
 import com.web.Mlog.dto.PostDto;
 import com.web.Mlog.dto.ReplyDto;
 import com.web.Mlog.repository.CategoryRepository;
+import com.web.Mlog.repository.FileDataRepository;
 import com.web.Mlog.repository.PostRepository;
 import com.web.Mlog.repository.ReplyRepository;
 import org.hibernate.Hibernate;
@@ -26,12 +28,14 @@ public class PostService {
     private PostRepository postRepository;
     private CategoryRepository categoryRepository;
     private ReplyRepository replyRepository;
+    private FileDataRepository fileDataRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, CategoryRepository categoryRepository, ReplyRepository replyRepository) {
+    public PostService(PostRepository postRepository, CategoryRepository categoryRepository, ReplyRepository replyRepository, FileDataRepository fileDataRepository) {
         this.postRepository = postRepository;
         this.categoryRepository = categoryRepository;
         this.replyRepository = replyRepository;
+        this.fileDataRepository = fileDataRepository;
     }
 
 
@@ -59,14 +63,24 @@ public class PostService {
 
         return post.get().toDetailsDto();
     }
-
+    @Transactional
     public boolean addPost(PostDto.PostAddDto postAddDto) {
         Optional<Category> optionalCategory = categoryRepository.findById(postAddDto.getCategoryId());
         if (optionalCategory.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
         }
-
-        return postRepository.save(postAddDto.toEntity(optionalCategory.get())).getTitle().equals(postAddDto.getTitle());
+        try {
+            List<FileData> fileList = fileDataRepository.findAllByUuidIn(postAddDto.getFileList());
+            Post post = postRepository.save(postAddDto.toEntity(optionalCategory.get(), fileList));
+            for (FileData fileData: fileList) {
+                System.out.println("file: " + fileData + ", post: " + post);
+                fileData.setPost(post);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "포스트 저장에 실패했습니다.");
+        }
+        return true;
     }
 
     @Transactional

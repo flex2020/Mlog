@@ -49,18 +49,21 @@ public class PostDto {
         private String title;
         private String content;
         private String previewContent;
-        private List<FileData> fileList;
+        private String thumbnail;
+        private List<String> fileList;
         private boolean visible;
 
-        public Post toEntity(Category category) {
+        public Post toEntity(Category category, List<FileData> fileList) {
             Post post = new Post();
+
             post.setCategory(category);
             post.setTitle(this.title);
             post.setContent(this.content);
             post.setPreviewContent(this.previewContent);
             post.setPostedDate(LocalDateTime.now());
             post.setUpdatedDate(LocalDateTime.now());
-            post.setFileList(this.fileList);
+            post.setFileList(fileList);
+            post.setThumbnail(this.thumbnail);
             post.setReplyList(new ArrayList<>());
             post.setVisible(this.visible);
 
