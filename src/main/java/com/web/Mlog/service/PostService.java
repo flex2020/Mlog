@@ -59,10 +59,20 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostDto.PostDetailsDto getPostDetail(int id) {
         Optional<Post> post = postRepository.findByPostIdAndVisibleIsTrue(id);
-        if(post.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
+        if (post.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
 
         return post.get().toDetailsDto();
     }
+
+    public List<ReplyDto.ReplyListDto> getReplyList(int id) {
+        List<ReplyDto.ReplyListDto> replyList = new ArrayList<>();
+        List<Reply> all = replyRepository.findAllByPostId(id);
+        for (Reply reply: all) {
+            replyList.add(reply.toReplyListDto());
+        }
+        return replyList;
+    }
+
     @Transactional
     public boolean addPost(PostDto.PostAddDto postAddDto) {
         Optional<Category> optionalCategory = categoryRepository.findById(postAddDto.getCategoryId());

@@ -57,6 +57,13 @@ public class PostController {
     public boolean postModify(@RequestBody PostDto.PostModifyDto postModifyDto) {
         return postService.modifyPost(postModifyDto);
     }
+    /**
+     * 포스트 댓글 불러오기
+     * */
+    @GetMapping("/{postId}/reply")
+    public List<ReplyDto.ReplyListDto> replyList(@PathVariable int postId) {
+        return postService.getReplyList(postId);
+    }
 
     /**
      * 포스트 댓글 작성
