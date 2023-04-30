@@ -133,29 +133,22 @@ public class PostService {
         return true;
     }
 
+    @Transactional
     public boolean addReply(int postId, ReplyDto.ReplyAddDto replyAddDto) {
-        Optional<Post> optionalPost = postRepository.findByPostIdAndVisibleIsTrue(postId);
-        if (optionalPost.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
-        }
-        try {
-            replyRepository.save(replyAddDto.toEntity(optionalPost.get()));
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 작성을 실패했습니다.");
-        }
+        Post post = postRepository.findByPostIdAndVisibleIsTrue(postId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다."));
+        replyRepository.save(replyAddDto.toEntity(post));
         return true;
     }
 
     @Transactional
     public boolean deleteReply(int postId, ReplyDto.ReplyDeleteDto replyDeleteDto) {
-        Optional<Reply> optionalReply = replyRepository.findByReplyIdAndVisibleIsTrue(replyDeleteDto.getReplyId());
-        if (!postRepository.existsById(postId)) {
+        Reply reply = replyRepository.findByReplyIdAndVisibleIsTrue(replyDeleteDto.getReplyId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다."));
+
+        if (reply.getPost().getPostId() != postId) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
-        if (optionalReply.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다.");
-        }
-        Reply reply = optionalReply.get();
         if (!reply.getPassword().equals(replyDeleteDto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 틀립니다.");
         }
@@ -165,6 +158,7 @@ public class PostService {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 삭제를 실패했습니다.");
         }
+
         return true;
     }
 
