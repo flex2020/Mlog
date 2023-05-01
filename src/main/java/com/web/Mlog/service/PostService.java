@@ -39,7 +39,9 @@ public class PostService {
     }
 
 
-
+    /**
+     * 포스트 목록
+     * */
     @Transactional(readOnly = true)
     public List<PostDto.PostListDto> getPostList(int categoryId) {
         List<Post> postList;
@@ -56,34 +58,28 @@ public class PostService {
         }
         return response;
     }
+
+    /**
+     * 포스트 상세보기
+     * */
     @Transactional(readOnly = true)
     public PostDto.PostDetailsDto getPostDetail(int id) {
-        Optional<Post> post = postRepository.findByPostIdAndVisibleIsTrue(id);
-        if (post.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
-
-        return post.get().toDetailsDto();
+        Post post = postRepository.findByPostIdAndVisibleIsTrue(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다."));
+        return post.toDetailsDto();
     }
 
-    public List<ReplyDto.ReplyListDto> getReplyList(int id) {
-        List<ReplyDto.ReplyListDto> replyList = new ArrayList<>();
-        List<Reply> all = replyRepository.findAllByPostId(id);
-        for (Reply reply: all) {
-            replyList.add(reply.toReplyListDto());
-        }
-        return replyList;
-    }
-
+    /**
+     * 포스트 작성
+     * */
     @Transactional
     public boolean addPost(PostDto.PostAddDto postAddDto) {
-        Optional<Category> optionalCategory = categoryRepository.findById(postAddDto.getCategoryId());
-        if (optionalCategory.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
-        }
+        Category category = categoryRepository.findById(postAddDto.getCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다."));
         try {
             List<FileData> fileList = fileDataRepository.findAllByUuidIn(postAddDto.getFileList());
-            Post post = postRepository.save(postAddDto.toEntity(optionalCategory.get(), fileList));
+            Post post = postRepository.save(postAddDto.toEntity(category, fileList));
             for (FileData fileData: fileList) {
-                System.out.println("file: " + fileData + ", post: " + post);
                 fileData.setPost(post);
             }
         } catch (Exception e) {
@@ -93,14 +89,15 @@ public class PostService {
         return true;
     }
 
+    /**
+     * 포스트 삭제
+     * */
     @Transactional
     public boolean deletePost(PostDto.PostDeleteDto postDeleteDto) {
-        Optional<Post> optionalPost = postRepository.findByPostIdAndVisibleIsTrue(postDeleteDto.getPostId());
-        if (optionalPost.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
-        }
+        Post post = postRepository.findByPostIdAndVisibleIsTrue(postDeleteDto.getPostId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다."));
         try {
-            optionalPost.get().setVisible(false);
+            post.setVisible(false);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "포스트 삭제를 실패했습니다.");
         }
@@ -108,31 +105,38 @@ public class PostService {
         return true;
     }
 
+    /**
+     * 포스트 수정
+     * */
     @Transactional
     public boolean modifyPost(PostDto.PostModifyDto postModifyDto) {
-        Optional<Post> optionalPost = postRepository.findByPostIdAndVisibleIsTrue(postModifyDto.getPostId());
-        Optional<Category> optionalCategory = categoryRepository.findByCategoryName(postModifyDto.getCategory());
-        if (optionalPost.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
-        }
-        if (optionalCategory.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
-        }
+        Post post = postRepository.findByPostIdAndVisibleIsTrue(postModifyDto.getPostId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다."));
+        Category category = categoryRepository.findByCategoryName(postModifyDto.getCategory())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다."));
         try {
-            Post post = optionalPost.get();
-
-            post.setCategory(optionalCategory.get());
-            post.setTitle(postModifyDto.getTitle());
-            post.setContent(postModifyDto.getContent());
-            post.setUpdatedDate(LocalDateTime.now());
-            post.setThumbnail(postModifyDto.getThumbnail());
-            post.setVisible(postModifyDto.isVisible());
+            post.modifyPost(postModifyDto, category);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "포스트 수정을 실패했습니다.");
         }
         return true;
     }
 
+    /**
+     * 댓글 목록
+     * */
+    public List<ReplyDto.ReplyListDto> getReplyList(int id) {
+        List<ReplyDto.ReplyListDto> replyList = new ArrayList<>();
+        List<Reply> all = replyRepository.findAllByPostId(id);
+        for (Reply reply: all) {
+            replyList.add(reply.toReplyListDto());
+        }
+        return replyList;
+    }
+
+    /**
+     * 댓글 작성
+     * */
     @Transactional
     public boolean addReply(int postId, ReplyDto.ReplyAddDto replyAddDto) {
         Post post = postRepository.findByPostIdAndVisibleIsTrue(postId)
@@ -141,6 +145,9 @@ public class PostService {
         return true;
     }
 
+    /**
+     * 댓글 삭제
+     * */
     @Transactional
     public boolean deleteReply(int postId, ReplyDto.ReplyDeleteDto replyDeleteDto) {
         Reply reply = replyRepository.findByReplyIdAndVisibleIsTrue(replyDeleteDto.getReplyId())
@@ -161,7 +168,9 @@ public class PostService {
 
         return true;
     }
-
+    /**
+     * 댓글 수정
+     * */
     @Transactional
     public boolean modifyReply(int postId, ReplyDto.ReplyModifyDto replyModifyDto) {
         Optional<Reply> optionalReply = replyRepository.findByReplyIdAndVisibleIsTrue(replyModifyDto.getReplyId());

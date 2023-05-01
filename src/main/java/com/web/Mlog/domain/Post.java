@@ -11,10 +11,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @SequenceGenerator(
         name = "POST_SEQ_GENERATOR"
         , sequenceName = "POST_SEQ"
@@ -42,10 +40,40 @@ public class Post {
     private String previewContent;
     @OneToMany(mappedBy = "post")
     private List<FileData> fileList;
+
     @OneToMany(mappedBy = "post")
     private List<Reply> replyList;
     @Column(nullable = false)
     private boolean visible;
+
+
+    @Builder
+    public Post(int postId, Category category, String title, String content, LocalDateTime postedDate, LocalDateTime updatedDate, String thumbnail, String previewContent, List<FileData> fileList, List<Reply> replyList, boolean visible) {
+        this.postId = postId;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.postedDate = postedDate;
+        this.updatedDate = updatedDate;
+        this.thumbnail = thumbnail;
+        this.previewContent = previewContent;
+        this.fileList = fileList;
+        this.replyList = replyList;
+        this.visible = visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public void modifyPost(PostDto.PostModifyDto postModifyDto, Category category) {
+        this.category = category;
+        this.title = postModifyDto.getTitle();
+        this.content = postModifyDto.getContent();
+        this.updatedDate = LocalDateTime.now();
+        this.thumbnail = postModifyDto.getThumbnail();
+        this.visible = postModifyDto.isVisible();
+    }
 
     /**
      * Entity -> DTO Convert
@@ -78,4 +106,5 @@ public class Post {
 
         return postDetailsDto;
     }
+
 }
