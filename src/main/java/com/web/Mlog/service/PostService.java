@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -48,15 +49,13 @@ public class PostService {
         if (categoryId == 0) {
             postList = postRepository.findAllByVisibleTrue();
         } else {
-            Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-            if (optionalCategory.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
-            postList = postRepository.findAllByCategoryAndVisibleTrue(optionalCategory.get());
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다."));
+            postList = postRepository.findAllByCategoryAndVisibleTrue(category);
         }
-        List<PostDto.PostListDto> response = new ArrayList<>();
-        for (Post post : postList) {
-            response.add(post.toPostListDto());
-        }
-        return response;
+        return postList.stream()
+                .map(Post::toPostListDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -126,13 +125,11 @@ public class PostService {
      * 댓글 목록
      * */
     public List<ReplyDto.ReplyListDto> getReplyList(int id) {
-        List<ReplyDto.ReplyListDto> replyList = new ArrayList<>();
-        List<Reply> all = replyRepository.findAllByPostId(id);
-        for (Reply reply: all) {
-            replyList.add(reply.toReplyListDto());
-        }
-        return replyList;
+        return replyRepository.findAllByPostId(id).stream()
+                .map(Reply::toReplyListDto)
+                .collect(Collectors.toList());
     }
+
 
     /**
      * 댓글 작성
