@@ -170,14 +170,11 @@ public class PostService {
      * */
     @Transactional
     public boolean modifyReply(int postId, ReplyDto.ReplyModifyDto replyModifyDto) {
-        Optional<Reply> optionalReply = replyRepository.findByReplyIdAndVisibleIsTrue(replyModifyDto.getReplyId());
+        Reply reply = replyRepository.findByReplyIdAndVisibleIsTrue(replyModifyDto.getReplyId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다."));
         if (!postRepository.existsById(postId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 포스트입니다.");
         }
-        if (optionalReply.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다.");
-        }
-        Reply reply = optionalReply.get();
         if (!reply.getPassword().equals(replyModifyDto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 틀립니다.");
         }
@@ -185,8 +182,9 @@ public class PostService {
             reply.setContent(replyModifyDto.getContent());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 수정을 실패했습니다.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 수정에 실패했습니다.");
         }
         return true;
     }
+
 }
