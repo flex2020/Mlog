@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -23,13 +24,9 @@ public class CategoryService {
     }
 
     public List<CategoryDto.CategoryListDto> getCategoryList() {
-        List<Category> all = categoryRepository.findAll();
-        List<CategoryDto.CategoryListDto> categoryList = new ArrayList<>();
-        for (Category category : all) {
-            categoryList.add(category.toCategoryListDto());
-        }
-
-        return categoryList;
+        return categoryRepository.findAll().stream()
+                .map(Category::toCategoryListDto)
+                .collect(Collectors.toList());
     }
 
     public boolean addCategory(CategoryDto.CategoryAddDto categoryDto) {
