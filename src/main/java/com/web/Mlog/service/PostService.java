@@ -10,6 +10,8 @@ import com.web.Mlog.repository.CategoryRepository;
 import com.web.Mlog.repository.FileDataRepository;
 import com.web.Mlog.repository.PostRepository;
 import com.web.Mlog.repository.ReplyRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,19 +27,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class PostService {
-    private PostRepository postRepository;
-    private CategoryRepository categoryRepository;
-    private ReplyRepository replyRepository;
-    private FileDataRepository fileDataRepository;
+    private final PostRepository postRepository;
+    private final CategoryRepository categoryRepository;
+    private final ReplyRepository replyRepository;
+    private final FileDataRepository fileDataRepository;
 
-    @Autowired
-    public PostService(PostRepository postRepository, CategoryRepository categoryRepository, ReplyRepository replyRepository, FileDataRepository fileDataRepository) {
-        this.postRepository = postRepository;
-        this.categoryRepository = categoryRepository;
-        this.replyRepository = replyRepository;
-        this.fileDataRepository = fileDataRepository;
-    }
 
 
     /**

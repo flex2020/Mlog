@@ -3,6 +3,8 @@ package com.web.Mlog.service;
 import com.web.Mlog.domain.Category;
 import com.web.Mlog.dto.CategoryDto;
 import com.web.Mlog.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class CategoryService {
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    private final CategoryRepository categoryRepository;
 
     public List<CategoryDto.CategoryListDto> getCategoryList() {
         return categoryRepository.findAll().stream()

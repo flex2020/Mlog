@@ -3,6 +3,8 @@ package com.web.Mlog.controller;
 import com.web.Mlog.dto.PostDto;
 import com.web.Mlog.dto.ReplyDto;
 import com.web.Mlog.service.PostService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,13 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/post")
+@RequiredArgsConstructor
+@Slf4j
 public class PostController {
-    private PostService postService;
-
-    @Autowired
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
+    private final PostService postService;
 
     /**
      * 포스트 목록

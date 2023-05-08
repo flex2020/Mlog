@@ -2,6 +2,8 @@ package com.web.Mlog.controller;
 
 import com.web.Mlog.dto.CategoryDto;
 import com.web.Mlog.service.CategoryService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,13 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/category")
+@RequiredArgsConstructor
+@Slf4j
 public class CategoryController {
-    private CategoryService categoryService;
-
-    @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    private final CategoryService categoryService;
 
     /**
      * 카테고리 목록
