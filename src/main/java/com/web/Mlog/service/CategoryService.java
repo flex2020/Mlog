@@ -50,12 +50,9 @@ public class CategoryService {
 
     @Transactional
     public boolean modifyCategory(CategoryDto.CategoryModifyDto  categoryDto) {
-        Optional<Category> optionalCategory = categoryRepository.findByCategoryName(categoryDto.getCategoryName());
-        if (optionalCategory.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
-        }
         try {
-            Category category = optionalCategory.get();
+            Category category = categoryRepository.findByCategoryName(categoryDto.getCategoryName())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다."));
             category.setCategoryName(categoryDto.getModifiedCategory());
         } catch (Exception e) {
             e.printStackTrace();
