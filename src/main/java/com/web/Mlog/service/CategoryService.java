@@ -36,11 +36,10 @@ public class CategoryService {
     }
 
     public boolean deleteCategory(CategoryDto.CategoryDeleteDto categoryDto) {
-        if (!categoryRepository.existsByCategoryName(categoryDto.getCategoryName())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다.");
-        }
+        Category category = categoryRepository.findByCategoryName(categoryDto.getCategoryName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다."));
         try {
-            categoryRepository.delete(categoryDto.toEntity());
+            categoryRepository.delete(category);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "해당 카테고리와 관련된 포스트가 존재합니다.");
