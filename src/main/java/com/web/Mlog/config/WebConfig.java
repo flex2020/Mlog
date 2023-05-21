@@ -17,12 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String os = System.getProperty("os.name").toLowerCase();
-        String resourcePath;
-        if(os.contains("win")) {
-            resourcePath = windowPath;
-        } else {
-            resourcePath = ubuntuPath;
-        }
+        String resourcePath = (os.contains("win")) ? windowPath : ubuntuPath;
+
         registry.addResourceHandler(connectPath)
                 .addResourceLocations(resourcePath);
     }
