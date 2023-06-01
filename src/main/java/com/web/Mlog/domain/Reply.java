@@ -43,13 +43,14 @@ public class Reply {
     private boolean visible;
 
     public ReplyDto.ReplyListDto toReplyListDto() {
-        ReplyDto.ReplyListDto replyListDto = new ReplyDto.ReplyListDto();
-        replyListDto.setReplyId(this.replyId);
-        replyListDto.setWriter(this.writer);
-        replyListDto.setContent(this.content);
-        replyListDto.setDate(this.date);
-        replyListDto.setToReply(this.toReply);
-        replyListDto.setVisible(this.visible);
+        ReplyDto.ReplyListDto replyListDto = ReplyDto.ReplyListDto.builder()
+                .replyId(replyId)
+                .writer(writer)
+                .content(content)
+                .date(date)
+                .toReply(toReply)
+                .visible(visible)
+                .build();
         return replyListDto;
     }
 }

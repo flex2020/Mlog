@@ -2,9 +2,7 @@ package com.web.Mlog.dto;
 
 import com.web.Mlog.domain.Post;
 import com.web.Mlog.domain.Reply;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +10,7 @@ public class ReplyDto {
     @Getter
     @Setter
     @ToString
+    @NoArgsConstructor
     public static class ReplyListDto {
         private long replyId;
         private String writer;
@@ -19,6 +18,15 @@ public class ReplyDto {
         private LocalDateTime date;
         private long toReply;
         private boolean visible;
+        @Builder
+        public ReplyListDto(long replyId, String writer, String content, LocalDateTime date, long toReply, boolean visible) {
+            this.replyId = replyId;
+            this.writer = writer;
+            this.content = content;
+            this.date = date;
+            this.toReply = toReply;
+            this.visible = visible;
+        }
     }
 
     @Getter
