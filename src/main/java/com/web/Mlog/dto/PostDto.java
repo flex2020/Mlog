@@ -5,10 +5,7 @@ import com.web.Mlog.domain.FileData;
 import com.web.Mlog.domain.Post;
 import com.web.Mlog.domain.Reply;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,8 +38,9 @@ public class PostDto {
     }
     @Getter
     @Setter
+    @Builder
     @ToString
-    @NoArgsConstructor
+    @AllArgsConstructor
     public static class PostAddDto {
         private int categoryId;
         private String title;
@@ -53,19 +51,18 @@ public class PostDto {
         private boolean visible;
 
         public Post toEntity(Category category, List<FileData> fileList) {
-            Post post = new Post();
-
-            post.setCategory(category);
-            post.setTitle(this.title);
-            post.setContent(this.content);
-            post.setPreviewContent(this.previewContent);
-            post.setPostedDate(LocalDateTime.now());
-            post.setUpdatedDate(LocalDateTime.now());
-            post.setFileList(fileList);
-            post.setThumbnail(this.thumbnail);
-            post.setReplyList(new ArrayList<>());
-            post.setVisible(this.visible);
-
+            Post post = Post.builder()
+                    .category(category)
+                    .title(title)
+                    .content(content)
+                    .previewContent(previewContent)
+                    .postedDate(LocalDateTime.now())
+                    .updatedDate(LocalDateTime.now())
+                    .fileList(fileList)
+                    .thumbnail(thumbnail)
+                    .replyList(new ArrayList<>())
+                    .visible(visible)
+                    .build();
             return post;
         }
     }
