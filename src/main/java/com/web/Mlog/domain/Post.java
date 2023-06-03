@@ -8,6 +8,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -79,31 +81,28 @@ public class Post {
      * Entity -> DTO Convert
      * */
     public PostDto.PostListDto toPostListDto() {
-        PostDto.PostListDto postListDto = new PostDto.PostListDto();
-        postListDto.setPostId(this.postId);
-        postListDto.setTitle(this.title);
-        postListDto.setCategory(this.category.getCategoryName());
-        postListDto.setPreviewContent(this.previewContent);
-        postListDto.setPostedDate(this.postedDate);
-        if (this.thumbnail != null) postListDto.setThumbnail(this.thumbnail);
-        else postListDto.setThumbnail("etc/no_image.png");
-        postListDto.setReplyCount(this.replyList.size());
-
+        PostDto.PostListDto postListDto = PostDto.PostListDto.builder()
+                .postId(postId)
+                .title(title)
+                .category(category.getCategoryName())
+                .previewContent(previewContent)
+                .postedDate(postedDate)
+                .thumbnail(Optional.ofNullable(this.thumbnail).orElse("etc/no_image.png"))
+                .replyCount(this.replyList.size())
+                .build();
         return postListDto;
     }
     public PostDto.PostDetailsDto toDetailsDto() {
-        PostDto.PostDetailsDto postDetailsDto = new PostDto.PostDetailsDto();
-
-        List<ReplyDto.ReplyListDto> replyList = new ArrayList<>();
-        for(Reply reply : this.replyList) replyList.add(reply.toReplyListDto());
-
-        postDetailsDto.setPostId(this.postId);
-        postDetailsDto.setTitle(this.title);
-        postDetailsDto.setCategory(this.category.getCategoryName());
-        postDetailsDto.setContent(this.content);
-        postDetailsDto.setPostedDate(this.postedDate);
-        postDetailsDto.setReplyList(replyList);
-
+        PostDto.PostDetailsDto postDetailsDto = PostDto.PostDetailsDto.builder()
+                .postId(this.postId)
+                .title(this.title)
+                .category(this.category.getCategoryName())
+                .content(this.content)
+                .postedDate(this.postedDate)
+                .replyList(this.replyList.stream()
+                        .map(Reply::toReplyListDto)
+                        .collect(Collectors.toList()))
+                .build();
         return postDetailsDto;
     }
 

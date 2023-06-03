@@ -16,6 +16,7 @@ public class PostDto {
     @Getter
     @Setter
     @ToString
+    @NoArgsConstructor
     public static class PostListDto {
         private int postId;
         private String title;
@@ -24,10 +25,21 @@ public class PostDto {
         private LocalDateTime postedDate;
         private String thumbnail;
         private int replyCount;
+        @Builder
+        public PostListDto(int postId, String title, String category, String previewContent, LocalDateTime postedDate, String thumbnail, int replyCount) {
+            this.postId = postId;
+            this.title = title;
+            this.category = category;
+            this.previewContent = previewContent;
+            this.postedDate = postedDate;
+            this.thumbnail = thumbnail;
+            this.replyCount = replyCount;
+        }
     }
     @Getter
     @Setter
     @ToString
+    @NoArgsConstructor
     public static class PostDetailsDto {
         private int postId;
         private String title;
@@ -35,6 +47,16 @@ public class PostDto {
         private String content;
         private LocalDateTime postedDate;
         private List<ReplyDto.ReplyListDto> replyList;
+
+        @Builder
+        public PostDetailsDto(int postId, String title, String category, String content, LocalDateTime postedDate, List<ReplyDto.ReplyListDto> replyList) {
+            this.postId = postId;
+            this.title = title;
+            this.category = category;
+            this.content = content;
+            this.postedDate = postedDate;
+            this.replyList = replyList;
+        }
     }
     @Getter
     @Setter
