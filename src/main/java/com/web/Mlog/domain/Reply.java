@@ -36,8 +36,6 @@ public class Reply {
     private String salt;
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime date;
-    @ColumnDefault("-1")
-    private long toReply;
     @Column(nullable = false)
     @ColumnDefault("true")
     private boolean visible;
@@ -48,7 +46,6 @@ public class Reply {
                 .writer(writer)
                 .content(content)
                 .date(date)
-                .toReply(toReply)
                 .visible(visible)
                 .build();
         return replyListDto;

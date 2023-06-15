@@ -36,7 +36,6 @@ public class ReplyDto {
         private String writer;
         private String content;
         private String password;
-        private long toReply;
         private boolean visible;
 
         public Reply toEntity(Post post) {
@@ -48,7 +47,6 @@ public class ReplyDto {
             reply.setPassword(this.password);
             reply.setSalt("");
             reply.setDate(LocalDateTime.now());
-            reply.setToReply(this.toReply);
             reply.setVisible(this.visible);
 
             return reply;
